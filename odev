@@ -1,0 +1,51 @@
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val mealList = listOf(
+            Meal("Karnıyarık", "Türk mutfağından lezzetli bir yemek.", R.drawable.karniyarik),
+            Meal("Spagetti MAKARNA", "İtalyan mutfağından nefis bir spagetti.", R.drawable.spagetti),
+            Meal("tavuk", "Hint mutfağından geleneksel bir tavuk yemeği.", R.drawable.chicken_curry),
+            Meal("Sushi", "Japon mutfağından enfes bir sushi tabağı.", R.drawable.sushi),
+            Meal("Burger", "Amerikan tarzı nefis bir hamburger.", R.drawable.burger)
+        )
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = MealAdapter(mealList)
+    }
+}
+
+data class Meal(val name: String, val description: String, val imageResId: Int)
+
+class MealAdapter(private val mealList: List<Meal>) : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_meal, parent, false)
+        return MealViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
+        val meal = mealList[position]
+        holder.bind(meal)
+    }
+
+    override fun getItemCount(): Int = mealList.size
+
+    inner class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val mealNameTextView: TextView = itemView.findViewById(R.id.meal_name)
+        private val mealDescriptionTextView: TextView = itemView.findViewById(R.id.meal_description)
+        private val mealImageView: ImageView = itemView.findViewById(R.id.meal_image)
+
+        fun bind(meal: Meal) {
+            mealNameTextView.text = meal.name
+            mealDescriptionTextView.text = meal.description
+            mealImageView.setImageResource(meal.imageResId)
+        }
+    }
+}
